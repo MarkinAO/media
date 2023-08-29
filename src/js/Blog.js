@@ -8,12 +8,12 @@ export default class Chat {
     this.user = null;
     this.modal = new Modal();
     this.manager = new VisualManager(container);
-    this.player = new PlayerManager(this.createMessage);
+    this.player = new PlayerManager(this.createMessage, this.manager);
   }
 
   init() {
     this.manager.createDashboard();
-    this.manager.showChat();   
+    this.manager.showBlog();   
     this.subscribeOnEvents();
   }
 

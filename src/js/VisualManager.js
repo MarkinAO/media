@@ -2,6 +2,7 @@ export default class VisualManager {
     constructor(container) {
         this.container = container;
         this.timerId = null;
+        this.contentBox = null;
     }
 
     showPlayer(activeIcon) {
@@ -26,44 +27,44 @@ export default class VisualManager {
             const end = new Date();
             const res = new Date(end - start);
             timer.textContent = res.toLocaleTimeString().slice(3, 8);      
-        }, 1000)      
+        }, 1000)
+    }
+
+    hidePlayer() {
+        const player = document.querySelector('.recording');
+        player.classList.remove('recording__active');
+        const activeIcon = document.querySelector('.highlight');
+        activeIcon.classList.remove('highlight');
+        const input = document.querySelector('.new-message-input');
+        input.removeAttribute('readonly');
+        const timer = document.querySelector('.timer');
+        timer.textContent = '00:00';            
+        clearInterval(this.timerId);
+
+        const icons = document.querySelectorAll('.icon');
+        icons.forEach(el => el.remove());
+    }
+
+    createDashboard() {        
+        const container = document.createElement('div');
+        container.classList.add('container');
+        this.container.appendChild(container);
+
+        const decorPanel = document.createElement('div');
+        decorPanel.classList.add('decorPanel');
+        container.appendChild(decorPanel);
+        for (let i = 0; i < 3; i++) {
+            const cercle = document.createElement('span');
+            cercle.classList.add('cercle');
+            decorPanel.appendChild(cercle);
         }
 
-        hidePlayer() {
-            const player = document.querySelector('.recording');
-            player.classList.remove('recording__active');
-            const activeIcon = document.querySelector('.highlight');
-            activeIcon.classList.remove('highlight');
-            const input = document.querySelector('.new-message-input');
-            input.removeAttribute('readonly');
-            const timer = document.querySelector('.timer');
-            timer.textContent = '00:00';
-            clearInterval(this.timerId);
-
-            const icons = document.querySelectorAll('.icon');
-            icons.forEach(el => el.remove());
-        }
-
-        createDashboard() {        
-            const container = document.createElement('div');
-            container.classList.add('container');
-            this.container.appendChild(container);
-
-            const decorPanel = document.createElement('div');
-            decorPanel.classList.add('decorPanel');
-            container.appendChild(decorPanel);
-            for (let i = 0; i < 3; i++) {
-                const cercle = document.createElement('span');
-                cercle.classList.add('cercle');
-                decorPanel.appendChild(cercle);
-            }
-
-            this.contentBox = document.createElement('div');
-            this.contentBox.classList.add('contentBox');
-            container.appendChild(this.contentBox);
-        }
+        this.contentBox = document.createElement('div');
+        this.contentBox.classList.add('contentBox');
+        container.appendChild(this.contentBox);
+    }
     
-    showChat() {
+    showBlog() {
         const blogwrap = document.createElement('div');
         blogwrap.classList.add('blog__wrap');
         this.contentBox.append(blogwrap);    
@@ -93,6 +94,7 @@ export default class VisualManager {
 
         const timer = document.createElement('div');
         timer.classList.add('timer');
+        timer.textContent = '00:00';
         recording.append(timer);
 
         const sendButton = document.createElement('button');

@@ -1,10 +1,8 @@
-import VisualManager from "./VisualManager";
-
 export default class PlayerManager {
-    constructor(createMessage) {
-        this.manager = new VisualManager();
+    constructor(createMessage, visualManager) {
+        this.manager = visualManager;
         this.createMessage = createMessage;
-        this.flag = null;
+        this.flag = false;
     }
 
     async startVideoRecorder() {
@@ -33,12 +31,11 @@ export default class PlayerManager {
             this.flag = fl;
             recorder.stop();
             stream.getTracks().forEach((track) => track.stop());
-            console.log('handler')
         }
         handler = handler.bind(this);
         
         videoRecord.addEventListener("click", () => handler(true));
-        videoStop.addEventListener("click", handler);
+        videoStop.addEventListener("click", () => handler());
 
         recorder.addEventListener("stop", () => {
             const blob = new Blob(chunks);
@@ -76,12 +73,11 @@ export default class PlayerManager {
             this.flag = fl;
             recorder.stop();
             stream.getTracks().forEach((track) => track.stop());
-            console.log('handler')
         }
         handler = handler.bind(this);
         
         audioRecord.addEventListener("click", () => handler(true));
-        audioStop.addEventListener("click", handler);
+        audioStop.addEventListener("click", () => handler());
 
         recorder.addEventListener("stop", () => {
             const blob = new Blob(chunks);
