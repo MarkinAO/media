@@ -6,6 +6,7 @@
   height: 100%;
   font-family: Arial, Helvetica, sans-serif;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
 .modal-wrap > .modal {
@@ -14,7 +15,7 @@
   gap: 10px;
   margin: 250px auto 0;
   padding: 25px 30px;
-  width: 400px;
+  max-width: 600px;
   font-size: 22px;
   background-color: white;
   border: 1px solid black;
@@ -66,5 +67,5 @@
 .modal > .errore {
   min-height: 18px;
   font-size: 16px;
-  color: red;
+  color: red;  
 }

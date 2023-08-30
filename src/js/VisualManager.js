@@ -1,11 +1,15 @@
+import Modal from "./Modal";
+
 export default class VisualManager {
     constructor(container) {
         this.container = container;
         this.timerId = null;
         this.contentBox = null;
-    }
+        this.modal = new Modal();
+        this.geo = null;
+    }    
 
-    showPlayer(activeIcon) {
+    showPlayer(activeIcon, video = false) {
         const recording = document.querySelector('.recording');
         const saveMedia = document.createElement('button');
         saveMedia.classList.add('icon');
@@ -27,7 +31,17 @@ export default class VisualManager {
             const end = new Date();
             const res = new Date(end - start);
             timer.textContent = res.toLocaleTimeString().slice(3, 8);      
-        }, 1000)
+        }, 1000);
+
+        if(video) {
+            const videoLivePlayer = document.createElement('video');
+            videoLivePlayer.classList.add('video-player');
+            videoLivePlayer.classList.add('video-player-live');
+            videoLivePlayer.setAttribute('controls', '');
+    
+            const form = document.querySelector('.form');
+            form.after(videoLivePlayer);            
+        }
     }
 
     hidePlayer() {
@@ -103,7 +117,7 @@ export default class VisualManager {
 
         const blogArea = document.createElement('div');
         blogArea.classList.add('blog__area');
-        blogwrap.append(blogArea);
+        blogwrap.append(blogArea);        
     }
 
     addPost(mes) {        
@@ -132,7 +146,10 @@ export default class VisualManager {
                 messageMedia = document.createElement('audio');
                 messageMedia.classList.add('audio-player');
             }
-            if(mes.type === 'video') messageMedia = document.createElement('video');
+            if(mes.type === 'video') {
+                messageMedia = document.createElement('video');
+                messageMedia.classList.add('video-player');
+            }
             messageMedia.src = mes.media;
             messageMedia.setAttribute('controls', '');
             messageContent.append(messageMedia);
@@ -141,13 +158,36 @@ export default class VisualManager {
         const geolocation = document.createElement('div');
         geolocation.classList.add('message-geo');
         geolocation.classList.add('message-title');
+        geolocation.textContent = 'Где-то в мире';
+        this.geo = geolocation
+
+        this.getGeolocation(messageBody);
         
         messageWrap.append(messageBody);      
         messageBody.append(messageTitle);
         messageBody.append(messageContent);
         messageBody.append(geolocation);
 
-        blogArea.prepend(messageWrap);
+        blogArea.prepend(messageWrap);        
+    }
+
+    getGeolocation(messageBody) {
+        function errorHandler() {            
+            this.modal.open();
+            this.modal.addOnClickHandler((geo) => {                
+                if(/[\[]*[\d]+[.]*[\d]*,[ ]*[-]*[\d]+[.]*[\d]*[\]]*/gm.test(geo)
+                && /[^a-zA-Z]/gm.test(geo)
+                && /[^а-яА-Я]/gm.test(geo)) {
+                    this.geo.textContent = geo;
+                    this.geo = null;
+                    this.modal.close();
+                } else {                    
+                    this.modal.showError();
+                }
+            });
+        }
+
+        errorHandler = errorHandler.bind(this);
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -156,9 +196,7 @@ export default class VisualManager {
                 const geolocation = messageBody.querySelector('.message-geo');
                 geolocation.textContent = `[${latitude}, ${longitude}]`;
             },
-            function (err) {
-                console.log(err);
-            },
+            errorHandler,
             { enableHighAccuracy: true }
             )
         }

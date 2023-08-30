@@ -22,13 +22,25 @@ export default class Modal {
 
     const header = document.createElement('div');
     header.classList.add('header');
-    header.textContent = 'Выберите псевдоним';
+    header.textContent = 'Что-то пошло не так(';
     modal.append(header);
+
+    const content = document.createElement('div');
+    content.classList.add('content');
+    modal.append(content);
+
+    const text = document.createElement('p');
+    text.textContent = 'К сожалению, нам не удалось определить ваше местоположение, пожалуйста, дайте разрешение на использование геолокации, либо введите координаты вручную.';
+    content.append(text);
+
+    const text1 = document.createElement('p');
+    text1.textContent = 'Широта и долгота через запятую:';
+    content.append(text1);
 
     const input = document.createElement('input');
     input.classList.add('modal-input');
-    input.setAttribute('name', 'nickname');
     input.setAttribute('type', 'text');
+    input.placeholder = '51.50851, 52.35816';
     modal.append(input);
     this.input = input;
 
@@ -46,6 +58,15 @@ export default class Modal {
     btn.textContent = 'Ok';
     buttonBox.append(btn);
     this.btn = btn;
+
+    const close = document.createElement('button');
+    close.classList = 'btn';
+    close.textContent = 'Отмена';
+    buttonBox.append(close);
+    
+    close.addEventListener('click', (e) => {
+      this.close();
+    })
 
     wrap.addEventListener('click', (e) => {
         const targetClass = e.target.classList;
@@ -65,14 +86,14 @@ export default class Modal {
     this.btn.addEventListener('click', (e) => {
       e.preventDefault();
       this.clearError();
-      const nickname = this.input.value;        
-      if(!nickname) return;
-      handler(nickname);
+      const data = this.input.value;        
+      if(!data) return;
+      handler(data);
     })
   }
 
   showError() {    
-    this.error.textContent = 'Псевдоним уже занят!';
+    this.error.textContent = 'Координаты введены неверно!';
   }
 
   clearError() {

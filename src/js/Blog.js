@@ -34,7 +34,7 @@ export default class Chat {
 
     const video = document.querySelector('.video');
     video.addEventListener('click', () => {
-      this.manager.showPlayer(video);
+      this.manager.showPlayer(video, true);
       this.player.startVideoRecorder();
     })
   }

@@ -15,6 +15,14 @@ export default class PlayerManager {
         const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
         });
+
+        const videoPlayerLive = document.querySelector('.video-player-live');
+        console.log(videoPlayerLive)
+        videoPlayerLive.srcObject = stream;
+
+        videoPlayerLive.addEventListener("canplay", () => {
+          videoPlayerLive.play();
+        });
         
         const recorder = new MediaRecorder(stream);
         const chunks = [];
@@ -31,6 +39,8 @@ export default class PlayerManager {
             this.flag = fl;
             recorder.stop();
             stream.getTracks().forEach((track) => track.stop());
+            const videoPlayerLive = document.querySelector('.video-player-live');
+            videoPlayerLive && videoPlayerLive.remove();
         }
         handler = handler.bind(this);
         
